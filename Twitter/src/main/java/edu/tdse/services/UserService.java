@@ -9,7 +9,6 @@ import edu.tdse.mapper.UserMapper;
 import edu.tdse.models.dto.response.UserResponseDTO;
 import edu.tdse.models.entity.User;
 import edu.tdse.repository.UserRepository;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -19,14 +18,12 @@ public class UserService {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
 
-    @Transactional
     public UserResponseDTO getPersonalInfo(String id) {
         User user = userRepository.findById(id)
             .orElseThrow(() -> new UserNotFoundException("User Not Found"));
         return userMapper.toDto(user);
     }
 
-    @Transactional
     public UserResponseDTO registerUser(String id, String name, String email) {
         return userRepository.findById(id)
             .map(userMapper::toDto)
@@ -41,7 +38,6 @@ public class UserService {
             });
     }
 
-    @Transactional
     public void addPostToUser(String userId, String postId){
 
       User user = userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException("User Not Found"));
