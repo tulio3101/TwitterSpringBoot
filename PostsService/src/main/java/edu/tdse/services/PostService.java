@@ -58,7 +58,7 @@ public class PostService{
 
         eventPublisher.publish(postEvent, "post.updated");
 
-        return postMapper.toDto(postRepository.save(post));
+        return postMapper.toDto(postUpdated);
     }
 
 
