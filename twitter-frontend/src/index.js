@@ -11,8 +11,10 @@ root.render(
     <Auth0Provider
       domain={process.env.REACT_APP_AUTH0_DOMAIN}
       clientId={process.env.REACT_APP_AUTH0_CLIENT_ID}
+      cacheLocation="localstorage"
       authorizationParams={{
         redirect_uri: window.location.origin,
+        audience: 'https://twitter-api',
         scope: 'openid profile email read:posts write:posts',
       }}
     >
