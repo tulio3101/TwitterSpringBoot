@@ -9,6 +9,9 @@ A secure Twitter-like web application that allows authenticated users to create 
 **Phase 1 – Monolith**
 
 
+![alt text](docs/images/MonolithInitialzr.png)
+
+
 ![alt text](docs/images/Monolith.png)
 
 
@@ -37,10 +40,9 @@ These instructions will get you a copy of the project up and running on your loc
 - **Maven 3.8+** – [Download](https://maven.apache.org/download.cgi)
 - **Node.js 18+ and npm** – [Download](https://nodejs.org/)
 - **MongoDB** – Local installation or [MongoDB Atlas](https://www.mongodb.com/atlas) (free tier)
-- **RabbitMQ** – Local installation or [CloudAMQP](https://www.cloudamqp.com/) (free tier)
+- **RabbitMQ** – [CloudAMQP](https://www.cloudamqp.com/) free tier (Little Lemur plan)
 - **Auth0 account** – [Sign up free](https://auth0.com/)
 - **Git** – [Download](https://git-scm.com/)
-- **Docker** (optional, for running RabbitMQ easily)
 
 ```bash
 # Verify Java
@@ -58,10 +60,17 @@ node -version   # should show 18.x or higher
 Before running the application, set up Auth0:
 
 1. **Create a Single Page Application (SPA)** in your Auth0 dashboard.
+
+   ![Auth0 Dashboard](docs/images/DashboardAuth0.png)
+
    - Note the **Domain** and **Client ID**.
    - Set **Allowed Callback URLs**: `http://localhost:3000`
    - Set **Allowed Logout URLs**: `http://localhost:3000`
    - Set **Allowed Web Origins**: `http://localhost:3000`
+
+   ![Application Settings](docs/images/ApplicationAuth0.png)
+
+   ![Callback URL Configuration](docs/images/URLCallback.png)
 
 2. **Create an API** in Auth0.
    - Set the **Identifier (Audience)** to: `https://twitter-api`
@@ -76,15 +85,14 @@ git clone https://github.com/tulio3101/TwitterSpringBoot.git
 cd TwitterSpringBoot
 ```
 
-**2. Start RabbitMQ** (using Docker)
+**2. Set up RabbitMQ via CloudAMQP**
 
-```bash
-docker run -d --name rabbitmq \
-  -p 5672:5672 -p 15672:15672 \
-  rabbitmq:3-management
-```
+This project uses [CloudAMQP](https://www.cloudamqp.com/) (free tier) as its AMQP broker — no local installation required.
 
-RabbitMQ management UI will be available at `http://localhost:15672` (guest/guest).
+1. Create a free account at [cloudamqp.com](https://www.cloudamqp.com/)
+2. Create a new instance — select the **Little Lemur** plan (free)
+3. Open the instance details and copy the **AMQP URL** (format: `amqps://user:password@host/vhost`)
+4. Use the individual parts of that URL to populate the `RABBITMQ_*` environment variables in the next step
 
 **3. Configure environment variables**
 
@@ -96,23 +104,23 @@ Each Spring Boot service reads configuration from environment variables. Set the
 | `AUTH0_ISSUER_URI` | Twitter (Gateway) | `https://YOUR_DOMAIN.auth0.com/` |
 | `CORS_ALLOWED_ORIGIN` | Twitter (Gateway) | Frontend origin, e.g. `http://localhost:3000` |
 | `SERVER_PORT` | Twitter (Gateway) | Service port (default: `4040`) |
-| `RABBITMQ_HOST` | PostsService, FeedService | RabbitMQ host (default: `localhost`) |
-| `RABBITMQ_PORT` | PostsService, FeedService | RabbitMQ port (default: `5672`) |
-| `RABBITMQ_USERNAME` | PostsService, FeedService | RabbitMQ username |
-| `RABBITMQ_PASSWORD` | PostsService, FeedService | RabbitMQ password |
-| `RABBITMQ_VIRTUAL_HOST` | PostsService, FeedService | RabbitMQ virtual host (default: `/`) |
+| `RABBITMQ_HOST` | PostsService, FeedService | CloudAMQP hostname (e.g. `your-instance.cloudamqp.com`) |
+| `RABBITMQ_PORT` | PostsService, FeedService | AMQP port (`5672` for AMQP, `5671` for AMQPS) |
+| `RABBITMQ_USERNAME` | PostsService, FeedService | CloudAMQP username |
+| `RABBITMQ_PASSWORD` | PostsService, FeedService | CloudAMQP password |
+| `RABBITMQ_VIRTUAL_HOST` | PostsService, FeedService | CloudAMQP virtual host (same as your username by default) |
 
 Example (Linux/macOS):
 
 ```bash
-export MONGODB_URI="mongodb://localhost:27017/twitter"
+export MONGODB_URI="mongodb+srv://user:password@cluster.mongodb.net/twitter"
 export AUTH0_ISSUER_URI="https://YOUR_DOMAIN.auth0.com/"
 export CORS_ALLOWED_ORIGIN="http://localhost:3000"
-export RABBITMQ_HOST="localhost"
+export RABBITMQ_HOST="your-instance.cloudamqp.com"
 export RABBITMQ_PORT="5672"
-export RABBITMQ_USERNAME="guest"
-export RABBITMQ_PASSWORD="guest"
-export RABBITMQ_VIRTUAL_HOST="/"
+export RABBITMQ_USERNAME="your-cloudamqp-user"
+export RABBITMQ_PASSWORD="your-cloudamqp-password"
+export RABBITMQ_VIRTUAL_HOST="your-cloudamqp-vhost"
 ```
 
 **4. Build and run the Spring Boot services**
