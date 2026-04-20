@@ -11,7 +11,6 @@ import edu.tdse.models.dto.request.PostRequestDTO;
 import edu.tdse.models.dto.response.PostResponseDTO;
 import edu.tdse.models.entity.Post;
 import edu.tdse.repository.PostRepository;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -24,7 +23,6 @@ public class PostService{
     private final UserService userService;
 
 
-    @Transactional
     public PostResponseDTO createPost(PostRequestDTO dto){
 
         Post post = postMapper.toEntity(dto);
@@ -40,7 +38,6 @@ public class PostService{
     }
 
 
-    @Transactional
     public PostResponseDTO updatePost(String postId, PostRequestDTO dto){
 
         Post post = postRepository.findById(postId).orElseThrow(() -> new PostNotFoundException("Post Not Found to Update"));
@@ -52,7 +49,6 @@ public class PostService{
 
 
 
-    @Transactional
     public void deletePost(String postId){
 
         Post post = postRepository.findById(postId).orElseThrow(() -> new PostNotFoundException("Post with: " + postId + " not found"));
@@ -63,7 +59,6 @@ public class PostService{
     }
 
 
-    @Transactional
     public List<PostResponseDTO> getAllPosts(){
 
         List<Post> posts = postRepository.findAll();

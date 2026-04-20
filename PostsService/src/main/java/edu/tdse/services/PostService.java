@@ -3,7 +3,6 @@ package edu.tdse.services;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import edu.tdse.eventBus.EventPublisher;
 import edu.tdse.events.PostCreatedEvent;
@@ -25,7 +24,6 @@ public class PostService{
     private final PostMapper postMapper;
     private final EventPublisher eventPublisher;
 
-    @Transactional
     public PostResponseDTO createPost(PostRequestDTO dto){
 
         Post post = postMapper.toEntity(dto);
@@ -43,7 +41,6 @@ public class PostService{
     }
 
 
-    @Transactional
     public PostResponseDTO updatePost(String postId, PostRequestDTO dto){
 
         Post post = postRepository.findById(postId).orElseThrow(() -> new PostNotFoundException("Post Not Found to Update"));
@@ -63,7 +60,6 @@ public class PostService{
 
 
 
-    @Transactional
     public void deletePost(String postId){
 
         Post post = postRepository.findById(postId).orElseThrow(() -> new PostNotFoundException("Post with: {postId} not found"));
@@ -79,7 +75,6 @@ public class PostService{
     }
 
 
-    @Transactional
     public List<PostResponseDTO> getAllPosts(){
 
         List<Post> posts = postRepository.findAll();
