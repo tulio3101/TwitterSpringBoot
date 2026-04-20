@@ -1,0 +1,13 @@
+package edu.tdse.mapper;
+
+import org.mapstruct.Mapper;
+
+import edu.tdse.models.dto.response.StreamResponseDTO;
+import edu.tdse.models.entity.Stream;
+
+@Mapper(componentModel = "spring")
+public interface StreamMapper {
+   
+   StreamResponseDTO toDto(Stream entity);
+
+}
