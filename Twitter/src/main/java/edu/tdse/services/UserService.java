@@ -1,7 +1,7 @@
 package edu.tdse.services;
 
 import java.util.ArrayList;
-
+import java.util.List;
 import org.springframework.stereotype.Service;
 
 import edu.tdse.exception.UserNotFoundException;
@@ -22,7 +22,7 @@ public class UserService {
     @Transactional
     public UserResponseDTO getPersonalInfo(String id) {
         User user = userRepository.findById(id)
-            .orElseThrow(() -> new UserNotFoundException("Usuario No Encontrado"));
+            .orElseThrow(() -> new UserNotFoundException("User Not Found"));
         return userMapper.toDto(user);
     }
 
@@ -39,5 +39,20 @@ public class UserService {
                     .build();
                 return userMapper.toDto(userRepository.save(newUser));
             });
+    }
+
+    @Transactional
+    public void addPostToUser(String userId, String postId){
+
+      User user = userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException("User Not Found"));
+
+      List<String> postsUser = user.getPostsId();
+
+      postsUser.add(postId);
+
+      user.setPostsId(postsUser);
+
+      User userUpdated = userRepository.save(user);
+
     }
 }
