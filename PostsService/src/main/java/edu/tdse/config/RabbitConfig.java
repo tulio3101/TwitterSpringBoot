@@ -17,8 +17,28 @@ public class RabbitConfig {
     }
 
     @Bean
+    public Queue postUpdatedQueue(){
+        return new Queue("post.updated.queue", true);
+    }
+
+    @Bean
+    public Queue postDeletedQueue(){
+        return new Queue("post.deleted.queue", true);
+    }
+
+    @Bean
     public Binding bindingPostCreated(){
         return BindingBuilder.bind(postCreatedQueue()).to(postExchange()).with("post.created");
+    }
+
+    @Bean
+    public Binding bindingPostUpdated(){
+        return BindingBuilder.bind(postUpdatedQueue()).to(postExchange()).with("post.updated");
+    }
+
+    @Bean
+    public Binding bindingPostDeleted(){
+        return BindingBuilder.bind(postDeletedQueue()).to(postExchange()).with("post.deleted");
     }
 
     @Bean
