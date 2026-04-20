@@ -9,10 +9,10 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>edu.tdse</groupId>
-	<artifactId>Twitter</artifactId>
+	<artifactId>UserAuthentication</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name/>
-	<description/>
+	<name>UserAuthentication</name>
+	<description>User Authentication Service</description>
 	<url/>
 	<licenses>
 		<license/>
