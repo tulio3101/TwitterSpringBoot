@@ -1,9 +1,10 @@
 package edu.tdse.services;
 
-import edu.tdse.exception.UserNotFoundException;
+import java.util.ArrayList;
 
 import org.springframework.stereotype.Service;
 
+import edu.tdse.exception.UserNotFoundException;
 import edu.tdse.mapper.UserMapper;
 import edu.tdse.models.dto.response.UserResponseDTO;
 import edu.tdse.models.entity.User;
@@ -14,22 +15,29 @@ import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
 public class UserService {
-    
+
     private final UserRepository userRepository;
     private final UserMapper userMapper;
 
-
     @Transactional
-    public UserResponseDTO getPersonalInfo(String id){
-
-        User user = userRepository.findById(id).orElseThrow(() -> new UserNotFoundException("Usuario No Encontrado"));
-
-        UserResponseDTO response = userMapper.toDto(user);
-
-        return response;
- 
+    public UserResponseDTO getPersonalInfo(String id) {
+        User user = userRepository.findById(id)
+            .orElseThrow(() -> new UserNotFoundException("Usuario No Encontrado"));
+        return userMapper.toDto(user);
     }
 
-
-
+    @Transactional
+    public UserResponseDTO registerUser(String id, String name, String email) {
+        return userRepository.findById(id)
+            .map(userMapper::toDto)
+            .orElseGet(() -> {
+                User newUser = User.builder()
+                    .id(id)
+                    .name(name)
+                    .email(email)
+                    .postsId(new ArrayList<>())
+                    .build();
+                return userMapper.toDto(userRepository.save(newUser));
+            });
+    }
 }

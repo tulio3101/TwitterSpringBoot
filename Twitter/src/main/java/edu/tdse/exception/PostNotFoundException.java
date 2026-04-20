@@ -1,8 +1,6 @@
 package edu.tdse.exception;
 
-import jakarta.ws.rs.NotFoundException;
-
-public class PostNotFoundException extends NotFoundException {
+public class PostNotFoundException extends RuntimeException {
 
     public PostNotFoundException(String message){
         super(message);

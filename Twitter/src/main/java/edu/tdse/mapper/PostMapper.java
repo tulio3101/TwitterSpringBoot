@@ -1,5 +1,7 @@
 package edu.tdse.mapper;
 
+import java.util.List;
+
 import org.mapstruct.Mapper;
 
 import edu.tdse.models.entity.Post;
@@ -12,5 +14,7 @@ public interface PostMapper {
     Post toEntity(PostRequestDTO dto);
 
     PostResponseDTO toDto (Post entity);
+
+    List<PostResponseDTO> toDto(List<Post> entities);
 
 }

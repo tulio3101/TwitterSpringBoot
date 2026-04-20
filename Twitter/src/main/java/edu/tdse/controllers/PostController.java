@@ -1,7 +1,10 @@
 package edu.tdse.controllers;
 
+import java.util.List;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -12,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import edu.tdse.models.dto.request.PostRequestDTO;
 import edu.tdse.models.dto.response.PostResponseDTO;
 import edu.tdse.exception.PostNotFoundException;
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
+import org.springframework.web.bind.annotation.RequestBody;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -90,38 +93,52 @@ public class PostController{
         @PathVariable String postId,
         @RequestBody PostRequestDTO post) {
 
-        PostResponseDTO updatedPost = postService.updatePost(post);
+        PostResponseDTO updatedPost = postService.updatePost(postId, post);
 
         return ResponseEntity.ok(updatedPost);
     }
 
     @GetMapping()
     @Operation(
-        summary = "Retrieve a post by ID",
-        description = "Fetches a specific post using its unique identifier. Returns the complete post data."
+        summary = "Retrieve all posts",
+        description = "Fetches all posts from the system. Returns a list of all available posts."
     )
     @ApiResponses(value = {
         @ApiResponse(
             responseCode = "200",
-            description = "Post retrieved successfully",
+            description = "Posts retrieved successfully",
             content = @Content(schema = @Schema(implementation = PostResponseDTO.class))
         ),
         @ApiResponse(
             responseCode = "404",
-            description = "Post not found - the specified postId does not exist",
+            description = "Post not found - no posts exist in the system",
             content = @Content(schema = @Schema(implementation = PostNotFoundException.class))
         ),
         @ApiResponse(
             responseCode = "500",
-            description = "Internal server error while retrieving post"
+            description = "Internal server error while retrieving posts"
         )
     })
-    public ResponseEntity<PostResponseDTO> getPostById(
-        @Parameter(description = "Unique identifier of the post to retrieve", example = "507f1f77bcf86cd799439011")
-        @PathVariable String postId){
+    public ResponseEntity<List<PostResponseDTO>> getAllPosts(){
 
-        return ResponseEntity.ok(postService.getPostById(postId));
+        return ResponseEntity.ok(postService.getAllPosts());
 
+    }
+
+    @DeleteMapping("/{postId}")
+    @Operation(summary = "Delete a post", description = "Deletes a post and removes it from the stream.")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "204", description = "Post deleted successfully"),
+        @ApiResponse(responseCode = "404", description = "Post not found",
+            content = @Content(schema = @Schema(implementation = PostNotFoundException.class)))
+    })
+    public ResponseEntity<Void> deletePost(
+        @Parameter(description = "Unique identifier of the post to delete")
+        @PathVariable String postId) {
+
+        postService.deletePost(postId);
+
+        return ResponseEntity.noContent().build();
     }
 
 }

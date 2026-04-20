@@ -32,6 +32,9 @@ public class PostResponseDTO {
     )
     private String userId;
 
+    @Schema(description = "Email of the user who created the post")
+    private String userEmail;
+
     @Schema(
         description = "Unique identifier of the stream where the post is published",
         example = "507f1f77bcf86cd799439013"

@@ -16,10 +16,9 @@ public class StreamService {
    
     private final StreamRepository streamRepository;
     private final PostRepository postRepository;
-    private final PostService postService;
     
 
-    @Transactional
+    @org.springframework.transaction.annotation.Transactional
     public Stream getStream(){
 
         List<Stream> streams = streamRepository.findAll();
@@ -45,7 +44,7 @@ public class StreamService {
         Stream stream = getStream();
 
         if (!stream.getPostsId().contains(postId)){
-            stream.getPostsId().add(postId);
+            stream.getPostsId().add(0, postId);
             streamRepository.save(stream);
         }
 
@@ -58,21 +57,7 @@ public class StreamService {
     public Stream removePostFromStream(String postId){
         Stream stream = getStream();
         stream.getPostsId().remove(postId);
-        postService.deletePost(postId);
         return streamRepository.save(stream);
-    }
-
-    public List<String> getAllPostsIdFromStream(){
-        return getStream().getPostsId();
-    }
-
-    @Transactional
-    public Stream getStreamById(String streamId){
-
-        Stream stream = streamRepository.findById(streamId).orElseThrow(() -> new StreamNotFoundException("Stream not found"));
-        
-        return stream;
-
     }
 
 }

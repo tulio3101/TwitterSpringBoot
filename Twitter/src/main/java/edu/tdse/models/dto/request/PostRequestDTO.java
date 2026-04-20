@@ -14,12 +14,6 @@ import io.swagger.v3.oas.annotations.media.Schema;
 public class PostRequestDTO {
 
     @Schema(
-        description = "Unique identifier of the post (generated automatically on creation, optional for POST requests)",
-        example = "507f1f77bcf86cd799439011"
-    )
-    private String postId;
-
-    @Schema(
         description = "The text content of the post",
         example = "Hello Twitter! This is my first post.",
         minLength = 1,
@@ -32,6 +26,9 @@ public class PostRequestDTO {
         example = "507f1f77bcf86cd799439012"
     )
     private String userId;
+
+    @Schema(description = "Email of the user who created the post")
+    private String userEmail;
 
     @Schema(
         description = "Unique identifier of the stream where the post belongs",

@@ -1,8 +1,7 @@
 package edu.tdse.exception;
 
-import jakarta.ws.rs.NotFoundException;
 
-public class UserNotFoundException extends NotFoundException {
+public class UserNotFoundException extends RuntimeException{
 
     public UserNotFoundException(String message){
         super(message);

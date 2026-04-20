@@ -1,6 +1,8 @@
 
 package edu.tdse.services;
 
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 
 import edu.tdse.exception.PostNotFoundException;
@@ -36,16 +38,13 @@ public class PostService{
 
 
     @Transactional
-    public PostResponseDTO updatePost(PostRequestDTO dto){
+    public PostResponseDTO updatePost(String postId, PostRequestDTO dto){
 
-        Post post = postRepository.findById(dto.getPostId()).orElseThrow(() -> new PostNotFoundException("Post Not Found to Update"));
+        Post post = postRepository.findById(postId).orElseThrow(() -> new PostNotFoundException("Post Not Found to Update"));
 
         post.setMessage(dto.getMessage());
-        
-        Post postUpdated = postRepository.save(post);
 
-        
-        return postMapper.toDto(postUpdated);
+        return postMapper.toDto(postRepository.save(post));
     }
 
 
@@ -55,17 +54,18 @@ public class PostService{
 
         Post post = postRepository.findById(postId).orElseThrow(() -> new PostNotFoundException("Post with: {postId} not found"));
 
+        streamService.removePostFromStream(postId);
         postRepository.delete(post);
 
     }
 
 
     @Transactional
-    public PostResponseDTO getPostById(String postId){
+    public List<PostResponseDTO> getAllPosts(){
 
-        Post post = postRepository.findById(postId).orElseThrow(() -> new PostNotFoundException("Post with : {postId} not found"));
+        List<Post> posts = postRepository.findAll();
 
-        return postMapper.toDto(post);
+        return postMapper.toDto(posts);
 
     }
 

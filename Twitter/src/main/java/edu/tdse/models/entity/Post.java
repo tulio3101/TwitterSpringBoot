@@ -2,7 +2,7 @@ package edu.tdse.models.entity;
 
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import jakarta.persistence.Id;
+import org.springframework.data.annotation.Id;
 import lombok.Builder;
 import lombok.Data;
 
@@ -17,6 +17,8 @@ public class Post {
     private String message;
 
     private String userId;
+
+    private String userEmail;
 
     private String streamId;
 
