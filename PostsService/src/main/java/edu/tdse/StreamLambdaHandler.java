@@ -16,10 +16,7 @@ public class StreamLambdaHandler implements RequestStreamHandler {
     static {
         try {
             handler = SpringBootLambdaContainerHandler.getAwsProxyHandler(PostsServiceApplication.class);
-            // If you are using API Gateway REST API (HTTP API or API Gateway V1)
-            // handler = SpringBootLambdaContainerHandler.getHttpApiV2ProxyHandler(PostsServiceApplication.class);
         } catch (ContainerInitializationException e) {
-            // if we fail here. We re-throw the exception to force another cold start
             e.printStackTrace();
             throw new RuntimeException("Could not initialize Spring Boot application", e);
         }
