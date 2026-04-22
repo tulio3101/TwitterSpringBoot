@@ -2,6 +2,7 @@ import { useCallback } from 'react';
 import { useAuth0 } from '@auth0/auth0-react';
 
 export const API_BASE = process.env.REACT_APP_API_BASE_URL || 'http://localhost:4040';
+export const FEED_API_BASE = process.env.REACT_APP_FEED_API_URL || process.env.REACT_APP_API_BASE_URL || 'http://localhost:4040';
 
 export function useApi() {
   const { getAccessTokenSilently } = useAuth0();
@@ -24,7 +25,7 @@ export function useApi() {
   );
 
   const getStream = useCallback(
-    () => fetch(`${API_BASE}/api/stream`).then((r) => r.json()),
+    () => fetch(`${FEED_API_BASE}/api/stream`).then((r) => r.json()),
     []
   );
 
