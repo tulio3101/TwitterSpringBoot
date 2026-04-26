@@ -2,6 +2,10 @@
 
 A secure Twitter-like web application that allows authenticated users to create and view short posts (maximum 140 characters) in a single public global stream. The project begins as a Spring Boot monolith with full Swagger/OpenAPI documentation and evolves into independent microservices (Posts, Feed, and User Authentication) communicating asynchronously via RabbitMQ events. The entire API is secured using Auth0 JWT tokens, and the frontend is built with React using the Auth0 React SDK.
 
+## VIDEO
+
+[VIDEO EXPLICACIÓN](https://youtu.be/wSBmu8IPI4M)
+
 ## Architecture Overview
 
 ### Evolution: Monolith → Microservices
@@ -275,13 +279,26 @@ curl -X GET http://localhost:4040/api/users/me \
 
 ## Deployment
 
-### Frontend on Amazon S3 
+### Frontend on Amazon S3 (or Vercel/Netlify)
+
+The React single-page application is built (`npm run build`) and deployed as static assets. The frontend authenticates users via Auth0 and makes secure, cross-origin HTTP requests to the AWS API Gateway (for serverless components) and the EC2 instance (for the feed).
+
+![alt text](docs/images/S3.png)
+
+![alt text](docs/images/s32.png)
 
 
+### Microservices on AWS Lambda & EC2
 
-### Microservices on AWS Lambda 
+To comply with the serverless architecture while maintaining the event-driven messaging requirement (RabbitMQ):
+1. **PostsService & UserAuthentication:** Deployed as AWS Lambda functions behind a single AWS API Gateway using `aws-serverless-java-container`. This allows Spring Boot's `@RestController` and Spring Security (Auth0 JWT validation) to run seamlessly in a serverless environment.
+2. **FeedService:** Deployed on an AWS EC2 instance. This architectural decision was made because RabbitMQ requires a persistent, long-lived TCP connection (`@RabbitListener`) which is fundamentally incompatible with the ephemeral, freeze-thaw lifecycle of AWS Lambda.
 
+![alt text](docs/images/LAMBDAS.png)
 
+![alt text](docs/images/FeedEC2.png)
+
+![alt text](docs/images/APIGATEWAY.png)
 
 ## Built With
 
@@ -303,7 +320,7 @@ curl -X GET http://localhost:4040/api/users/me \
 ## Authors
 
 - **Tulio Riaño Sánchez** — [tulio3101](https://github.com/tulio3101)
-- **Juan Sebastián Puentes Julio**
+- **Juan Sebastián Puentes Julio** - [sebasPuentes](https://github.com/sebasPuentes)
 
 ## License
 
